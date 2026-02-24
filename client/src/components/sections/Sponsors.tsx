@@ -1,68 +1,170 @@
+import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import { gsap } from "@/lib/gsap";
+import type { EventWithMatchups } from "@shared/types";
 
-export default function Sponsors() {
-  // Creating purely text-based stylized representations since we don't have all logo files
-  const sponsors = [
-    { name: "Forbet", isTitle: true, color: "#00FF00" },
-    { name: "Induvallas" },
-    { name: "Grupo" },
-    { name: "Deepal by Changan" },
-    { name: "Oriental" },
-    { name: "El Universo" },
-    { name: "Snap Shot" },
-    { name: "CCQ" },
-    { name: "Social Magazine" },
-    { name: "Chango" },
-    { name: "IMD" },
-  ];
+interface SponsorsProps {
+  sponsors: EventWithMatchups["sponsors"];
+}
+
+export default function Sponsors({ sponsors }: SponsorsProps) {
+  const marqueeRef = useRef<HTMLDivElement>(null);
+
+  // Group sponsors by tier
+  const titleSponsors = sponsors.filter((s) => (s.tier || s.sponsor?.tier) === "title");
+  const goldSponsors = sponsors.filter((s) => (s.tier || s.sponsor?.tier) === "gold");
+  const silverSponsors = sponsors.filter((s) => (s.tier || s.sponsor?.tier) === "silver");
+  const bronzeSponsors = sponsors.filter((s) => (s.tier || s.sponsor?.tier) === "bronze");
+
+  // GSAP marquee for silver sponsors
+  useEffect(() => {
+    if (!marqueeRef.current) return;
+    const el = marqueeRef.current;
+    const inner = el.querySelector(".marquee-track") as HTMLElement;
+    if (!inner) return;
+
+    // Clone for seamless loop
+    const clone = inner.cloneNode(true) as HTMLElement;
+    el.appendChild(clone);
+
+    const totalWidth = inner.offsetWidth;
+
+    const tl = gsap.timeline({ repeat: -1 });
+    tl.fromTo(
+      el.querySelectorAll(".marquee-track"),
+      { x: 0 },
+      {
+        x: -totalWidth,
+        duration: totalWidth / 80,
+        ease: "none",
+      },
+    );
+
+    el.addEventListener("mouseenter", () => tl.pause());
+    el.addEventListener("mouseleave", () => tl.resume());
+
+    return () => {
+      tl.kill();
+      // Remove cloned element
+      if (clone.parentNode === el) {
+        el.removeChild(clone);
+      }
+    };
+  }, [silverSponsors.length]);
 
   return (
     <section className="py-20 border-t border-b border-white/5 bg-black overflow-hidden">
-      <div className="container mx-auto px-4 mb-12">
-        <h3 className="text-center font-display text-2xl md:text-3xl uppercase tracking-widest text-muted-foreground">
-          Con El Auspicio De
-        </h3>
-      </div>
-
       {/* Title Sponsor */}
-      <div className="flex justify-center mb-16">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="flex flex-col items-center"
-        >
-          <span className="font-display text-5xl md:text-7xl italic tracking-tighter" style={{ color: "#00FF00" }}>
-            Forbet
-          </span>
-          <span className="text-xs tracking-[0.3em] text-white/50 uppercase mt-2 font-semibold">
-            Pronostica y Gana
-          </span>
-        </motion.div>
-      </div>
-
-      {/* Scrolling Marquee */}
-      <div className="relative w-full flex overflow-x-hidden">
-        {/* Fading edges */}
-        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10" />
-        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
-        
-        <motion.div
-          className="flex items-center gap-16 md:gap-24 whitespace-nowrap px-8"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 40, ease: "linear", repeat: Infinity }}
-        >
-          {/* Double array for seamless loop */}
-          {[...sponsors.filter(s => !s.isTitle), ...sponsors.filter(s => !s.isTitle)].map((sponsor, idx) => (
-            <span 
-              key={`${sponsor.name}-${idx}`} 
-              className="font-display text-2xl md:text-4xl uppercase tracking-widest text-white/30 hover:text-white transition-colors duration-300 cursor-default"
+      {titleSponsors.length > 0 && (
+        <div className="flex justify-center mb-16">
+          {titleSponsors.map((ts) => (
+            <motion.div
+              key={ts.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="flex flex-col items-center"
             >
-              {sponsor.name}
-            </span>
+              {ts.sponsor?.logoUrl ? (
+                <img
+                  src={ts.sponsor.logoUrl}
+                  alt={ts.sponsor.name}
+                  className="h-16 md:h-24 w-auto mb-2"
+                />
+              ) : (
+                <span
+                  className="font-display text-5xl md:text-7xl italic tracking-tighter"
+                  style={{ color: ts.sponsor?.brandColor || "#00FF00" }}
+                >
+                  {ts.sponsor?.name}
+                </span>
+              )}
+              {ts.sponsor?.tagline && (
+                <span className="text-xs tracking-[0.3em] text-white/50 uppercase mt-2 font-semibold">
+                  {ts.sponsor.tagline}
+                </span>
+              )}
+            </motion.div>
           ))}
-        </motion.div>
-      </div>
+        </div>
+      )}
+
+      {/* Gold Sponsors - "Presentado por" */}
+      {goldSponsors.length > 0 && (
+        <div className="container mx-auto px-4 mb-14">
+          <h3 className="text-center font-display text-lg md:text-xl uppercase tracking-[0.3em] text-accent/80 mb-8">
+            Presentado Por
+          </h3>
+          <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
+            {goldSponsors.map((gs, idx) => (
+              <motion.div
+                key={gs.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                className="flex flex-col items-center"
+              >
+                {gs.sponsor?.logoUrl ? (
+                  <img
+                    src={gs.sponsor.logoUrl}
+                    alt={gs.sponsor.name}
+                    className="h-10 md:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity"
+                  />
+                ) : (
+                  <span className="font-display text-2xl md:text-3xl uppercase tracking-widest text-white/60 hover:text-white transition-colors duration-300 cursor-default">
+                    {gs.sponsor?.name}
+                  </span>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Silver Sponsors - "Con el auspicio de" - GSAP marquee */}
+      {silverSponsors.length > 0 && (
+        <div className="mt-8">
+          <div className="container mx-auto px-4 mb-6">
+            <h3 className="text-center font-display text-sm md:text-base uppercase tracking-[0.3em] text-muted-foreground/60 mb-2">
+              Con El Auspicio De
+            </h3>
+          </div>
+
+          <div className="relative w-full flex overflow-x-hidden" ref={marqueeRef}>
+            {/* Fading edges */}
+            <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10" />
+            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
+
+            <div className="marquee-track flex items-center gap-16 md:gap-24 whitespace-nowrap px-8">
+              {silverSponsors.map((ss) => (
+                <span
+                  key={ss.id}
+                  className="font-display text-2xl md:text-4xl uppercase tracking-widest text-white/30 hover:text-white transition-colors duration-300 cursor-default"
+                >
+                  {ss.sponsor?.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bronze Sponsors (reserved, empty for now) */}
+      {bronzeSponsors.length > 0 && (
+        <div className="container mx-auto px-4 mt-12">
+          <div className="flex flex-wrap items-center justify-center gap-8">
+            {bronzeSponsors.map((bs) => (
+              <span
+                key={bs.id}
+                className="font-display text-lg uppercase tracking-widest text-white/20"
+              >
+                {bs.sponsor?.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

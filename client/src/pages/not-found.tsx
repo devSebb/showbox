@@ -1,21 +1,28 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { Link } from "wouter";
+import { ArrowLeft } from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">404 Page Not Found</h1>
-          </div>
-
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      <Navbar />
+      <div className="pt-32 pb-24 text-center">
+        <h1 className="font-display text-8xl md:text-[12rem] text-primary text-glow mb-4">404</h1>
+        <h2 className="font-display text-3xl md:text-5xl text-white uppercase tracking-tight mb-6">
+          Página No Encontrada
+        </h2>
+        <p className="text-muted-foreground mb-8 text-lg">
+          La página que buscas no existe o ha sido movida.
+        </p>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-display text-xl uppercase tracking-widest px-10 py-4 transition-all hover:box-glow"
+        >
+          <ArrowLeft className="w-5 h-5" /> Volver al Inicio
+        </Link>
+      </div>
+      <Footer />
     </div>
   );
 }

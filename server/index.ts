@@ -1,6 +1,9 @@
 import express, { type Request, Response, NextFunction } from "express";
+import path from "path";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
+import { setupAuth } from "./auth";
+import { seed } from "./seed";
 import { createServer } from "http";
 
 const app = express();
@@ -21,6 +24,12 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: false }));
+
+// Serve uploaded files
+app.use("/uploads", express.static(path.join(process.cwd(), "server", "uploads")));
+
+// Serve attached_assets
+app.use("/attached_assets", express.static(path.join(process.cwd(), "attached_assets")));
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -60,6 +69,12 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Setup auth before routes
+  setupAuth(app);
+
+  // Seed the database
+  await seed();
+
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
