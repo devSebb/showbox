@@ -1,3 +1,4 @@
+import { DbStorage } from "./storage-db";
 import {
   type User,
   type InsertUser,
@@ -518,4 +519,10 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is required in production");
+}
+
+export const storage: IStorage = process.env.DATABASE_URL
+  ? new DbStorage()
+  : new MemStorage();

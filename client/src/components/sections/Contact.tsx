@@ -43,7 +43,7 @@ export default function Contact({ settings }: ContactProps) {
     {
       key: "instagram",
       icon: <Instagram className="w-5 h-5 group-hover:scale-110 transition-transform" />,
-      url: settings?.instagram,
+      url: "https://www.instagram.com/showboxec/",
     },
     {
       key: "facebook",

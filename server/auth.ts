@@ -4,8 +4,10 @@ import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
 import type { Express } from "express";
 import { storage } from "./storage";
+import { pgPool } from "./db";
 import type { User } from "@shared/schema";
 
 const scryptAsync = promisify(scrypt);
@@ -43,19 +45,32 @@ declare global {
 }
 
 export function setupAuth(app: Express) {
-  const MemoryStore = createMemoryStore(session);
+  if (process.env.NODE_ENV === "production" && !process.env.SESSION_SECRET) {
+    throw new Error("SESSION_SECRET is required in production");
+  }
+
+  const secret =
+    process.env.SESSION_SECRET || "dev-only-secret-change-in-production";
+
+  let store: session.Store;
+  if (pgPool) {
+    const PgStore = connectPgSimple(session);
+    store = new PgStore({ pool: pgPool, createTableIfNotExists: true });
+  } else {
+    const MemoryStore = createMemoryStore(session);
+    store = new MemoryStore({ checkPeriod: 86400000 });
+  }
 
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "showbox-promotions-secret-2026",
+    secret,
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
     },
-    store: new MemoryStore({
-      checkPeriod: 86400000,
-    }),
+    store,
   };
 
   app.use(session(sessionSettings));

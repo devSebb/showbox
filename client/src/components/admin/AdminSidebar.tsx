@@ -22,7 +22,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import logo from "@assets/image_1771898956125.png";
+import logo from "@assets/showbox_logo.png";
 
 const navItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },

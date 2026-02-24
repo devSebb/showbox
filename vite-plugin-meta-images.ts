@@ -56,6 +56,12 @@ export function metaImagesPlugin(): Plugin {
 }
 
 function getDeploymentUrl(): string | null {
+  if (process.env.RENDER_EXTERNAL_URL) {
+    const url = new URL(process.env.RENDER_EXTERNAL_URL).origin;
+    log('[meta-images] using Render external URL:', url);
+    return url;
+  }
+
   if (process.env.REPLIT_INTERNAL_APP_DOMAIN) {
     const url = `https://${process.env.REPLIT_INTERNAL_APP_DOMAIN}`;
     log('[meta-images] using internal app domain:', url);

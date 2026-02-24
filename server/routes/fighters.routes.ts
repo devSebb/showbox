@@ -2,6 +2,7 @@ import { Router } from "express";
 import { storage } from "../storage";
 import { insertFighterSchema } from "@shared/schema";
 import { updateFighterSchema } from "@shared/types";
+import { deleteFromR2 } from "../services/r2";
 
 const router = Router();
 
@@ -36,10 +37,32 @@ router.put("/:id", async (req, res) => {
     if (!parsed.success) {
       return res.status(400).json({ message: "Datos inválidos", errors: parsed.error.flatten() });
     }
+
+    // Fetch existing record before update to capture current image URLs for R2 cleanup
+    const existing = await storage.getFighter(req.params.id);
+    if (!existing) {
+      return res.status(404).json({ message: "Peleador no encontrado" });
+    }
+
     const fighter = await storage.updateFighter(req.params.id, parsed.data);
     if (!fighter) {
       return res.status(404).json({ message: "Peleador no encontrado" });
     }
+
+    // R2 cleanup: fire-and-forget for changed image fields
+    const { photoUrl: newPhoto, photoAction: newAction } = parsed.data;
+
+    if (newPhoto !== undefined && newPhoto !== existing.photoUrl && existing.photoUrl) {
+      deleteFromR2(existing.photoUrl).catch((e) =>
+        console.error("[R2] photoUrl cleanup error:", e),
+      );
+    }
+    if (newAction !== undefined && newAction !== existing.photoAction && existing.photoAction) {
+      deleteFromR2(existing.photoAction).catch((e) =>
+        console.error("[R2] photoAction cleanup error:", e),
+      );
+    }
+
     res.json(fighter);
   } catch (err) {
     res.status(500).json({ message: "Error del servidor" });

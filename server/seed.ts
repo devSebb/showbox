@@ -1,19 +1,29 @@
 import { storage } from "./storage";
 import { hashPassword } from "./auth";
 import { log } from "./index";
+import { patchFightCard } from "../seeds/patch-fightcard";
 
 export async function seed() {
   // Check if already seeded
   const existingAdmin = await storage.getUserByUsername("admin");
   if (existingAdmin) {
     log("Database already seeded, skipping", "seed");
+    await patchFightCard();
     return;
   }
 
   log("Seeding database...", "seed");
 
   // ─── Admin User ──────────────────────────────────
-  const hashedPassword = await hashPassword("showbox2026");
+  let adminPassword = process.env.ADMIN_INITIAL_PASSWORD;
+  if (!adminPassword) {
+    if (process.env.NODE_ENV === "production") {
+      log("ADMIN_INITIAL_PASSWORD not set — skipping admin creation. Set it and redeploy to create the admin user.", "seed");
+      return;
+    }
+    adminPassword = "showbox2026";
+  }
+  const hashedPassword = await hashPassword(adminPassword);
   await storage.createUser({
     username: "admin",
     password: hashedPassword,
@@ -21,28 +31,28 @@ export async function seed() {
 
   // ─── Fighters ────────────────────────────────────
   const fighterData = [
-    { firstName: "Bone", lastName: "Bone", nickname: null, weightClass: "welterweight", weightLbs: 147, nationality: "Ecuador" },
-    { firstName: "Rangel", lastName: "Rangel", nickname: null, weightClass: "welterweight", weightLbs: 147, nationality: "Ecuador" },
-    { firstName: "Vera", lastName: "Vera", nickname: null, weightClass: "super lightweight", weightLbs: 138, nationality: "Ecuador" },
-    { firstName: "Espinoza", lastName: "Espinoza", nickname: null, weightClass: "super lightweight", weightLbs: 138, nationality: "Ecuador" },
-    { firstName: "Sanchez", lastName: "Sanchez", nickname: null, weightClass: "super featherweight", weightLbs: 130, nationality: "Ecuador" },
-    { firstName: "Laje", lastName: "Laje", nickname: null, weightClass: "super featherweight", weightLbs: 130, nationality: "Ecuador" },
-    { firstName: "Inga", lastName: "Inga", nickname: null, weightClass: "featherweight", weightLbs: 126, nationality: "Ecuador" },
-    { firstName: "Pulupa", lastName: "Pulupa", nickname: null, weightClass: "featherweight", weightLbs: 126, nationality: "Ecuador" },
-    { firstName: "Gudiño", lastName: "Gudiño", nickname: null, weightClass: "super lightweight", weightLbs: 140, nationality: "Ecuador" },
-    { firstName: "Chuchuca", lastName: "Chuchuca", nickname: null, weightClass: "super lightweight", weightLbs: 140, nationality: "Ecuador" },
-    { firstName: "Wampash", lastName: "Wampash", nickname: null, weightClass: "lightweight", weightLbs: 132, nationality: "Ecuador" },
-    { firstName: "Cohuoj", lastName: "Cohuoj", nickname: null, weightClass: "lightweight", weightLbs: 132, nationality: "Ecuador" },
-    { firstName: "Cardeño", lastName: "Cardeño", nickname: null, weightClass: "welterweight", weightLbs: 147, nationality: "Ecuador" },
-    { firstName: "Riascos", lastName: "Riascos", nickname: null, weightClass: "welterweight", weightLbs: 147, nationality: "Ecuador" },
-    { firstName: "Carrillo", lastName: "Carrillo", nickname: null, weightClass: "light heavyweight", weightLbs: 172, nationality: "Ecuador" },
-    { firstName: "Castillo", lastName: "Castillo", nickname: null, weightClass: "light heavyweight", weightLbs: 172, nationality: "Ecuador" },
-    { firstName: "Anchico", lastName: "Anchico", nickname: null, weightClass: "super lightweight", weightLbs: 140, nationality: "Ecuador" },
-    { firstName: "Betancourt", lastName: "Betancourt", nickname: null, weightClass: "super lightweight", weightLbs: 140, nationality: "Ecuador" },
-    { firstName: "Preston", lastName: "Preston", nickname: null, weightClass: "lightweight", weightLbs: 132, nationality: "Ecuador" },
-    { firstName: "Macias", lastName: "Macias", nickname: null, weightClass: "lightweight", weightLbs: 132, nationality: "Ecuador" },
-    { firstName: "Mendez", lastName: "Mendez", nickname: null, weightClass: "bantamweight", weightLbs: 118, nationality: "Ecuador" },
-    { firstName: "Carrera", lastName: "Carrera", nickname: null, weightClass: "bantamweight", weightLbs: 118, nationality: "Ecuador" },
+    { firstName: "Erick", lastName: "Mendez", nickname: null, weightClass: "bantamweight", weightLbs: 118, nationality: "Ecuador" },
+    { firstName: "Jonathan", lastName: "Carrera", nickname: null, weightClass: "bantamweight", weightLbs: 118, nationality: "Ecuador" },
+    { firstName: "Preston", lastName: "Montiria", nickname: null, weightClass: "bantamweight", weightLbs: 118, nationality: null },
+    { firstName: "Ivan", lastName: "Macias", nickname: null, weightClass: "bantamweight", weightLbs: 118, nationality: null },
+    { firstName: "Jhancarlo", lastName: "Anchico", nickname: null, weightClass: "super lightweight", weightLbs: 140, nationality: "Ecuador" },
+    { firstName: "David", lastName: "Betancourt", nickname: null, weightClass: "super lightweight", weightLbs: 140, nationality: "Ecuador" },
+    { firstName: "Cristobal", lastName: "Carrillo", nickname: null, weightClass: "light heavyweight", weightLbs: 172, nationality: "Ecuador" },
+    { firstName: "Luis", lastName: "Castillo", nickname: null, weightClass: "light heavyweight", weightLbs: 172, nationality: "Ecuador" },
+    { firstName: "Will", lastName: "Cardeño", nickname: null, weightClass: "welterweight", weightLbs: 147, nationality: "Colombia" },
+    { firstName: "Miguel", lastName: "Riascos", nickname: null, weightClass: "welterweight", weightLbs: 147, nationality: "Ecuador" },
+    { firstName: "Jhon", lastName: "Wampash Jr", nickname: null, weightClass: "super featherweight", weightLbs: 132, nationality: "Ecuador" },
+    { firstName: "Jason", lastName: "Crooks Mejia", nickname: null, weightClass: "super featherweight", weightLbs: 132, nationality: null },
+    { firstName: "Fernando", lastName: "Gudiño", nickname: null, weightClass: "super lightweight", weightLbs: 140, nationality: "Ecuador" },
+    { firstName: "Pablo", lastName: "Chuchuca", nickname: null, weightClass: "super lightweight", weightLbs: 140, nationality: "Ecuador" },
+    { firstName: "Kevin", lastName: "Inga", nickname: null, weightClass: "featherweight", weightLbs: 126, nationality: "Ecuador" },
+    { firstName: "Christian", lastName: "Pulupa", nickname: null, weightClass: "featherweight", weightLbs: 126, nationality: "Ecuador" },
+    { firstName: "Mauricio", lastName: "Sanchez", nickname: null, weightClass: "super featherweight", weightLbs: 130, nationality: "Venezuela" },
+    { firstName: "Edwin", lastName: "Laje", nickname: null, weightClass: "super featherweight", weightLbs: 130, nationality: "Ecuador" },
+    { firstName: "Carlos", lastName: "Vera", nickname: null, weightClass: "super lightweight", weightLbs: 138, nationality: "Ecuador" },
+    { firstName: "Alexander", lastName: "Espinoza", nickname: null, weightClass: "super lightweight", weightLbs: 138, nationality: "Ecuador" },
+    { firstName: "Erick", lastName: "Bone", nickname: null, weightClass: "welterweight", weightLbs: 147, nationality: "Ecuador" },
+    { firstName: "Eduardo", lastName: "Rangel", nickname: null, weightClass: "welterweight", weightLbs: 147, nationality: "Mexico" },
   ];
 
   const fighters: Record<string, any> = {};
@@ -91,12 +101,12 @@ export async function seed() {
     { red: "INGA", blue: "PULUPA", weightLbs: 126, rounds: 6, section: "main", order: 4, label: null },
     // Prelims
     { red: "GUDIÑO", blue: "CHUCHUCA", weightLbs: 140, rounds: 8, section: "prelim", order: 5, label: null },
-    { red: "WAMPASH", blue: "COHUOJ", weightLbs: 132, rounds: 8, section: "prelim", order: 6, label: null },
+    { red: "WAMPASH JR", blue: "CROOKS MEJIA", weightLbs: 132, rounds: 8, section: "prelim", order: 6, label: null },
     { red: "CARDEÑO", blue: "RIASCOS", weightLbs: 147, rounds: 4, section: "prelim", order: 7, label: null },
     { red: "CARRILLO", blue: "CASTILLO", weightLbs: 172, rounds: 4, section: "prelim", order: 8, label: null },
     // Undercard
     { red: "ANCHICO", blue: "BETANCOURT", weightLbs: 140, rounds: 6, section: "undercard", order: 9, label: null },
-    { red: "PRESTON", blue: "MACIAS", weightLbs: 132, rounds: 4, section: "undercard", order: 10, label: null },
+    { red: "MONTIRIA", blue: "MACIAS", weightLbs: 118, rounds: 4, section: "undercard", order: 10, label: null },
     { red: "MENDEZ", blue: "CARRERA", weightLbs: 118, rounds: 4, section: "undercard", order: 11, label: null },
   ];
 
@@ -149,7 +159,7 @@ export async function seed() {
 
   // ─── Settings ────────────────────────────────────
   const defaultSettings: Record<string, string> = {
-    instagram: "https://www.instagram.com/showboxpromotionsec",
+    instagram: "https://www.instagram.com/showboxec/",
     facebook: "https://www.facebook.com/showboxpromotionsec",
     youtube: "https://www.youtube.com/@showboxpromotionsec",
     tiktok: "https://www.tiktok.com/@showboxpromotionsec",
@@ -162,4 +172,6 @@ export async function seed() {
   await storage.batchUpdateSettings(defaultSettings);
 
   log("Seeding complete!", "seed");
+  await patchFightCard();
 }
+

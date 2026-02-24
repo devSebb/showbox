@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "@/lib/gsap";
-import logo from "@assets/image_1771898956125.png";
+import logo from "@assets/showbox_logo.png";
 
 interface AboutProps {
   aboutText?: string;

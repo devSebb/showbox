@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import logo from "@assets/image_1771898956125.png";
+import logo from "@assets/showbox_logo.png";
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("");

@@ -1,7 +1,18 @@
 node_modules
 dist
+.env
 .DS_Store
 server/public
 vite.config.ts.*
 *.tar.gz
 server/uploads/
+
+# Markdown files
+*.md
+
+# Instruction / AI config files
+.cursor/
+.cursorrules
+*.instructions
+RULE.md
+AGENTS.md

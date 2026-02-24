@@ -4,6 +4,7 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { setupAuth } from "./auth";
 import { seed } from "./seed";
+import { closeDb, runMigrations } from "./db";
 import { createServer } from "http";
 
 const app = express();
@@ -68,7 +69,32 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check — must be registered before auth middleware
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "ok" });
+});
+
+// Graceful shutdown
+async function shutdown() {
+  log("graceful shutdown initiated", "shutdown");
+  const forceExit = setTimeout(() => {
+    log("shutdown timed out, forcing exit", "shutdown");
+    process.exit(1);
+  }, 10000);
+  forceExit.unref();
+
+  await new Promise<void>((resolve) => httpServer.close(() => resolve()));
+  await closeDb();
+  process.exit(0);
+}
+
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
+
 (async () => {
+  // Run DB migrations before anything else
+  await runMigrations();
+
   // Setup auth before routes
   setupAuth(app);
 

@@ -28,7 +28,6 @@ export default function Navbar({ ticketUrl, ticketCtaText }: NavbarProps) {
     ? [
         { name: "Inicio", href: "#inicio", isHash: true },
         { name: "Cartelera", href: "#cartelera", isHash: true },
-        { name: "Evento", href: "#evento", isHash: true },
         { name: "Eventos", href: "/eventos", isHash: false },
         { name: "Peleadores", href: "/peleadores", isHash: false },
         { name: "Contacto", href: "#contacto", isHash: true },
@@ -99,7 +98,7 @@ export default function Navbar({ ticketUrl, ticketCtaText }: NavbarProps) {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <Link href="/" className="relative z-50">
-          <img src={logo} alt="Showbox Promotions EC" className="h-10 md:h-12 w-auto" />
+          <img src={logo} alt="Showbox Promotions EC" className="h-16 md:h-20 w-auto" />
         </Link>
 
         {/* Desktop Nav */}
