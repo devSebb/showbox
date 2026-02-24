@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import fighter1 from "@assets/images/fighter_1.jpg";
-import fighter2 from "@assets/images/fighter_2.jpg";
+import fighter1 from "@/assets/images/fighter_1.jpg";
+import fighter2 from "@/assets/images/fighter_2.jpg";
 
 const fights = [
   {

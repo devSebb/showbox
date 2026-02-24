@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import gallery1 from "@assets/images/gallery_1.jpg";
-import gallery2 from "@assets/images/gallery_2.jpg";
-import gallery3 from "@assets/images/gallery_3.jpg";
-import gallery4 from "@assets/images/gallery_4.jpg";
+import gallery1 from "@/assets/images/gallery_1.jpg";
+import gallery2 from "@/assets/images/gallery_2.jpg";
+import gallery3 from "@/assets/images/gallery_3.jpg";
+import gallery4 from "@/assets/images/gallery_4.jpg";
 
 export default function Gallery() {
   const images = [gallery1, gallery2, gallery3, gallery4];
