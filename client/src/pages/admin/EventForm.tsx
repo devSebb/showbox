@@ -210,7 +210,7 @@ export default function EventForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>URL de Boletos</Label>
-              <Input {...register("ticketUrl")} className="bg-card border-white/10" placeholder="https://buenplan.com.ec" />
+              <Input {...register("ticketUrl")} className="bg-card border-white/10" placeholder="https://www.buenplan.com.ec/event/quorum-figth-xiii-2025-quito" />
             </div>
             <div className="space-y-2">
               <Label>Texto Botón</Label>

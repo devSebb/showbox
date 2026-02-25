@@ -6,7 +6,7 @@ interface FooterProps {
 }
 
 export default function Footer({ ticketUrl }: FooterProps) {
-  const ctaUrl = ticketUrl || "https://buenplan.com.ec";
+  const ctaUrl = ticketUrl || "https://www.buenplan.com.ec/event/quorum-figth-xiii-2025-quito";
 
   const hashLinks = [
     { name: "Inicio", href: "#inicio" },

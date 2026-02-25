@@ -86,7 +86,7 @@ export async function seed() {
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7997931343714!2d-78.4371991!3d-0.1906233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d591322abdf837%3A0xe545cdd62f90141a!2sQuorum%20Quito!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus",
     posterUrl: "/attached_assets/main-card.jpeg",
     heroImageUrl: "/attached_assets/Screenshot_2026-02-23_at_9.09.33_PM_1771898976524.png",
-    ticketUrl: "https://buenplan.com.ec",
+    ticketUrl: "https://www.buenplan.com.ec/event/quorum-figth-xiii-2025-quito",
     ticketCtaText: "Comprar Boletos",
     description:
       "La decimotercera edición de la noche de boxeo profesional más esperada de Ecuador.",

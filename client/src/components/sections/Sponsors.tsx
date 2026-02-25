@@ -9,6 +9,7 @@ interface SponsorsProps {
 
 export default function Sponsors({ sponsors }: SponsorsProps) {
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const marqueeBronzeRef = useRef<HTMLDivElement>(null);
 
   // Group sponsors by tier
   const titleSponsors = sponsors.filter((s) => (s.tier || s.sponsor?.tier) === "title");
@@ -52,6 +53,40 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
     };
   }, [silverSponsors.length]);
 
+  // GSAP marquee for bronze sponsors
+  useEffect(() => {
+    if (!marqueeBronzeRef.current) return;
+    const el = marqueeBronzeRef.current;
+    const inner = el.querySelector(".marquee-track") as HTMLElement;
+    if (!inner) return;
+
+    const clone = inner.cloneNode(true) as HTMLElement;
+    el.appendChild(clone);
+
+    const totalWidth = inner.offsetWidth;
+
+    const tl = gsap.timeline({ repeat: -1 });
+    tl.fromTo(
+      el.querySelectorAll(".marquee-track"),
+      { x: 0 },
+      {
+        x: -totalWidth,
+        duration: totalWidth / 80,
+        ease: "none",
+      },
+    );
+
+    el.addEventListener("mouseenter", () => tl.pause());
+    el.addEventListener("mouseleave", () => tl.resume());
+
+    return () => {
+      tl.kill();
+      if (clone.parentNode === el) {
+        el.removeChild(clone);
+      }
+    };
+  }, [bronzeSponsors.length]);
+
   return (
     <section className="py-20 border-t border-b border-white/5 bg-black overflow-hidden">
       {/* Title Sponsor */}
@@ -69,7 +104,7 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
                 <img
                   src={ts.sponsor.logoUrl}
                   alt={ts.sponsor.name}
-                  className="h-16 md:h-24 w-auto mb-2"
+                  className="h-24 md:h-36 w-auto mb-2 object-contain"
                 />
               ) : (
                 <span
@@ -109,7 +144,7 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
                   <img
                     src={gs.sponsor.logoUrl}
                     alt={gs.sponsor.name}
-                    className="h-10 md:h-14 w-auto opacity-80 hover:opacity-100 transition-opacity"
+                    className="h-16 md:h-20 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
                   />
                 ) : (
                   <span className="font-display text-2xl md:text-3xl uppercase tracking-widest text-white/60 hover:text-white transition-colors duration-300 cursor-default">
@@ -136,32 +171,63 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
             <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10" />
             <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
 
-            <div className="marquee-track flex items-center gap-16 md:gap-24 whitespace-nowrap px-8">
+            <div className="marquee-track flex items-center gap-16 md:gap-24 whitespace-nowrap px-8 min-h-[3rem] md:min-h-[4rem]">
               {silverSponsors.map((ss) => (
-                <span
+                <div
                   key={ss.id}
-                  className="font-display text-2xl md:text-4xl uppercase tracking-widest text-white/30 hover:text-white transition-colors duration-300 cursor-default"
+                  className="flex items-center justify-center h-10 md:h-14 shrink-0"
                 >
-                  {ss.sponsor?.name}
-                </span>
+                  {ss.sponsor?.logoUrl ? (
+                    <img
+                      src={ss.sponsor.logoUrl}
+                      alt={ss.sponsor.name}
+                      className="h-10 md:h-14 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity"
+                    />
+                  ) : (
+                    <span className="font-display text-2xl md:text-4xl uppercase tracking-widest text-white/30 hover:text-white transition-colors duration-300 cursor-default">
+                      {ss.sponsor?.name}
+                    </span>
+                  )}
+                </div>
               ))}
             </div>
           </div>
         </div>
       )}
 
-      {/* Bronze Sponsors (reserved, empty for now) */}
+      {/* Bronze Sponsors - "Con el apoyo de" - GSAP marquee */}
       {bronzeSponsors.length > 0 && (
-        <div className="container mx-auto px-4 mt-12">
-          <div className="flex flex-wrap items-center justify-center gap-8">
-            {bronzeSponsors.map((bs) => (
-              <span
-                key={bs.id}
-                className="font-display text-lg uppercase tracking-widest text-white/20"
-              >
-                {bs.sponsor?.name}
-              </span>
-            ))}
+        <div className="mt-8">
+          <div className="container mx-auto px-4 mb-6">
+            <h3 className="text-center font-display text-sm md:text-base uppercase tracking-[0.3em] text-muted-foreground/60 mb-2">
+              Con El Apoyo De
+            </h3>
+          </div>
+
+          <div className="relative w-full flex overflow-x-hidden" ref={marqueeBronzeRef}>
+            <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10" />
+            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
+
+            <div className="marquee-track flex items-center gap-16 md:gap-24 whitespace-nowrap px-8 min-h-[2rem] md:min-h-[3rem]">
+              {bronzeSponsors.map((bs) => (
+                <div
+                  key={bs.id}
+                  className="flex items-center justify-center h-8 md:h-12 shrink-0"
+                >
+                  {bs.sponsor?.logoUrl ? (
+                    <img
+                      src={bs.sponsor.logoUrl}
+                      alt={bs.sponsor.name}
+                      className="h-8 md:h-12 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity"
+                    />
+                  ) : (
+                    <span className="font-display text-lg md:text-xl uppercase tracking-widest text-white/20 hover:text-white/40 transition-colors duration-300 cursor-default">
+                      {bs.sponsor?.name}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

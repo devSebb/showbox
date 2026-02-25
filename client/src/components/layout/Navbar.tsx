@@ -40,7 +40,7 @@ export default function Navbar({ ticketUrl, ticketCtaText }: NavbarProps) {
       ];
 
   const ctaText = ticketCtaText || "Comprar Boletos";
-  const ctaUrl = ticketUrl || "https://buenplan.com.ec";
+  const ctaUrl = ticketUrl || "https://www.buenplan.com.ec/event/quorum-figth-xiii-2025-quito";
 
   const renderNavLink = (link: typeof navLinks[0]) => {
     if (link.isHash) {
