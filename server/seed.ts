@@ -161,7 +161,7 @@ export async function seed() {
   const defaultSettings: Record<string, string> = {
     instagram: "https://www.instagram.com/showboxec/",
     facebook: "https://www.facebook.com/showboxpromotionsec",
-    youtube: "https://www.youtube.com/@showboxpromotionsec",
+    youtube: "https://www.youtube.com/@ShowBoxPromotionsEC",
     tiktok: "https://www.tiktok.com/@showboxpromotionsec",
     contactEmail: "info@showboxpromotions.ec",
     contactPhone: "+593999999999",

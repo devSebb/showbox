@@ -2,19 +2,46 @@ services:
   - type: web
     name: showbox
     env: node
-    buildCommand: npm install && npm run build
+    nodeVersion: 20
+    buildCommand: npm ci && npm run build
     startCommand: npm start
+    healthCheckPath: /api/health
+
     envVars:
       - key: NODE_ENV
         value: production
+
       - key: SESSION_SECRET
         generateValue: true
+
       - key: DATABASE_URL
         fromDatabase:
           name: showbox-db
           property: connectionString
+
+      # Set this manually on first deploy to create admin user.
+      # After confirming admin login works, remove this env var.
       - key: ADMIN_INITIAL_PASSWORD
-        sync: false   # Set manually on first deploy, then remove after admin is created
+        sync: false
+
+      # Cloudflare R2 (optional – leave unset if not using R2 yet)
+      - key: R2_ACCOUNT_ID
+        sync: false
+
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+
+      - key: R2_BUCKET
+        sync: false
+
+      - key: R2_ENDPOINT
+        sync: false
+
+      - key: R2_PUBLIC_BASE_URL
+        sync: false
 
 databases:
   - name: showbox-db
