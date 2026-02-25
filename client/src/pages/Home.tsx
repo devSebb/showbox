@@ -3,7 +3,7 @@ import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero";
 import FightCard from "@/components/sections/FightCard";
 import EventInfo from "@/components/sections/EventInfo";
-import fightWeekImg from "@assets/fight-week.jpeg";
+import fightWeekImg from "@assets/fight-week-bg.png";
 import About from "@/components/sections/About";
 import Sponsors from "@/components/sections/Sponsors";
 import Gallery from "@/components/sections/Gallery";
