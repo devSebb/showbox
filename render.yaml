@@ -40,4 +40,4 @@ services:
 databases:
   - name: showbox-db
     databaseName: showbox
-    plan: starter
+    
