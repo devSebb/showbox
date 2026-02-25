@@ -55,7 +55,7 @@ export function setupAuth(app: Express) {
   let store: session.Store;
   if (pgPool) {
     const PgStore = connectPgSimple(session);
-    store = new PgStore({ pool: pgPool, createTableIfNotExists: true });
+    store = new PgStore({ pool: pgPool, createTableIfMissing: true });
   } else {
     const MemoryStore = createMemoryStore(session);
     store = new MemoryStore({ checkPeriod: 86400000 });
