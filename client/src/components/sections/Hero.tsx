@@ -171,13 +171,13 @@ export default function Hero({ title, subtitle, date, venue, city, ticketUrl, he
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="inline-block border border-white/20 px-4 py-1.5 mb-6 bg-white/5 backdrop-blur-sm">
-            <span className="text-xs md:text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-              Showbox Promotions EC Presenta
-            </span>
-          </div>
+          <img
+            src="/showbox_logo.png"
+            alt="Showbox Promotions EC"
+            className="max-w-[240px] sm:max-w-[320px] md:max-w-[420px] lg:max-w-[520px] xl:max-w-[600px] w-full mx-auto object-contain mb-6"
+          />
 
-          <h1 className="font-display text-5xl md:text-7xl lg:text-[7rem] leading-[0.9] text-white uppercase tracking-normal mb-2">
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[0.9] text-white uppercase tracking-normal mb-2">
             {line1}<br />
             <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>{line2}</span><br />
             {hasRoman && <span className="text-primary text-glow">{romanNumeral}</span>}

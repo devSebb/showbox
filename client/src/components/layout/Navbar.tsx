@@ -96,28 +96,29 @@ export default function Navbar({ ticketUrl, ticketCtaText }: NavbarProps) {
           : "bg-transparent py-5"
       }`}
     >
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <Link href="/" className="relative z-50">
-          <img src={logo} alt="Showbox Promotions EC" className="h-16 md:h-20 w-auto" />
+      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between w-full">
+        <Link href="/" className="relative z-50 flex-shrink-0">
+          <img src={logo} alt="Showbox Promotions EC" className="h-8 md:h-10 w-auto" />
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        {/* Desktop Nav - centered between logo and CTA */}
+        <nav className="hidden md:flex flex-1 justify-center">
           <ul className="flex items-center gap-6">
             {navLinks.map((link) => (
               <li key={link.name}>{renderNavLink(link)}</li>
             ))}
           </ul>
-          <a
-            href={ctaUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-primary hover:bg-primary/90 text-white font-display text-lg uppercase tracking-widest px-6 py-2 transition-all hover:box-glow hover:-translate-y-0.5"
-            data-testid="link-buy-tickets-nav"
-          >
-            {ctaText}
-          </a>
         </nav>
+
+        <a
+          href={ctaUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden md:inline-flex flex-shrink-0 bg-primary hover:bg-primary/90 text-white font-display text-lg uppercase tracking-widest px-6 py-2 transition-all hover:box-glow hover:-translate-y-0.5"
+          data-testid="link-buy-tickets-nav"
+        >
+          {ctaText}
+        </a>
 
         {/* Mobile Menu Toggle */}
         <button

@@ -104,7 +104,7 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
                 <img
                   src={ts.sponsor.logoUrl}
                   alt={ts.sponsor.name}
-                  className="h-24 md:h-36 w-auto mb-2 object-contain"
+                  className="h-28 md:h-40 w-auto mb-2 object-contain"
                 />
               ) : (
                 <span
@@ -144,7 +144,7 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
                   <img
                     src={gs.sponsor.logoUrl}
                     alt={gs.sponsor.name}
-                    className="h-16 md:h-20 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
+                    className="h-20 md:h-24 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
                   />
                 ) : (
                   <span className="font-display text-2xl md:text-3xl uppercase tracking-widest text-white/60 hover:text-white transition-colors duration-300 cursor-default">
