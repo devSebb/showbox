@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { gsap } from "@/lib/gsap";
 import fighter1 from "@/assets/images/fighter_1.jpg";
 import fighter2 from "@/assets/images/fighter_2.jpg";
+import fightWeekImg from "@assets/fight-week.jpeg";
 import mainCardImg from "@assets/main-card.jpeg";
 import prelimsCardImg from "@assets/prelims-card.jpeg";
 import undercardImg from "@assets/undercard.jpeg";
@@ -425,8 +426,9 @@ export default function FightCard({ matchups, ticketUrl }: FightCardProps) {
         </motion.p>
 
         {/* Fight Card Posters */}
-        <div className="mt-14 grid grid-cols-3 gap-3 md:gap-5">
+        <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
           {[
+            { src: fightWeekImg, label: "Media Week", delay: 0.05 },
             { src: mainCardImg, label: "Main Card", delay: 0.1 },
             { src: prelimsCardImg, label: "Preliminares", delay: 0.25 },
             { src: undercardImg, label: "Undercard", delay: 0.4 },

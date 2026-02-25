@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Instagram, Facebook, Youtube } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 
@@ -8,6 +8,11 @@ interface ContactProps {
 
 export default function Contact({ settings }: ContactProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -79,7 +84,34 @@ export default function Contact({ settings }: ContactProps) {
         </div>
 
         <div className="contact-form max-w-2xl mx-auto bg-background border border-white/10 p-8 md:p-12">
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="space-y-6"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setStatus("sending");
+              setErrorMessage("");
+              try {
+                const res = await fetch("/api/public/contact", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ name, email, message }),
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                  setStatus("error");
+                  setErrorMessage(data.message || "Error al enviar. Intenta de nuevo.");
+                  return;
+                }
+                setStatus("success");
+                setName("");
+                setEmail("");
+                setMessage("");
+              } catch {
+                setStatus("error");
+                setErrorMessage("Error de conexión. Intenta de nuevo.");
+              }
+            }}
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -87,8 +119,11 @@ export default function Contact({ settings }: ContactProps) {
                 </label>
                 <input
                   type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full bg-input/50 border-b border-white/20 px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
                   placeholder="Tu nombre completo"
+                  required
                 />
               </div>
               <div className="space-y-2">
@@ -97,8 +132,11 @@ export default function Contact({ settings }: ContactProps) {
                 </label>
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-input/50 border-b border-white/20 px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
                   placeholder="tu@email.com"
+                  required
                 />
               </div>
             </div>
@@ -109,17 +147,28 @@ export default function Contact({ settings }: ContactProps) {
               </label>
               <textarea
                 rows={4}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 className="w-full bg-input/50 border-b border-white/20 px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors resize-none"
                 placeholder="¿En qué podemos ayudarte?"
+                required
               />
             </div>
 
+            {status === "success" && (
+              <p className="text-sm text-green-400 font-medium">Mensaje enviado correctamente.</p>
+            )}
+            {status === "error" && errorMessage && (
+              <p className="text-sm text-red-400 font-medium">{errorMessage}</p>
+            )}
+
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-white font-display text-xl uppercase tracking-widest py-4 transition-all hover:box-glow mt-4"
+              disabled={status === "sending"}
+              className="w-full bg-primary hover:bg-primary/90 text-white font-display text-xl uppercase tracking-widest py-4 transition-all hover:box-glow mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
               data-testid="button-submit-contact"
             >
-              Enviar Mensaje
+              {status === "sending" ? "Enviando…" : "Enviar Mensaje"}
             </button>
           </form>
 

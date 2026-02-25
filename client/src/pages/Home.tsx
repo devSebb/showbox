@@ -3,6 +3,7 @@ import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero";
 import FightCard from "@/components/sections/FightCard";
 import EventInfo from "@/components/sections/EventInfo";
+import fightWeekImg from "@assets/fight-week.jpeg";
 import About from "@/components/sections/About";
 import Sponsors from "@/components/sections/Sponsors";
 import Gallery from "@/components/sections/Gallery";
@@ -55,6 +56,13 @@ export default function Home() {
           heroImageUrl={event.heroImageUrl}
           sponsors={event.sponsors}
         />
+        <section className="w-full" aria-hidden>
+          <img
+            src={fightWeekImg}
+            alt="Fight Week — programa de la semana del evento"
+            className="w-full h-auto object-cover object-center block"
+          />
+        </section>
         <EventInfo
           date={event.date}
           venue={event.venue}

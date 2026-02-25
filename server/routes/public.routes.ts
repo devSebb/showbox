@@ -1,8 +1,76 @@
 import { Router } from "express";
+import nodemailer from "nodemailer";
+import { z } from "zod";
 import { storage } from "../storage";
 import type { MatchupWithFighters, EventWithMatchups } from "@shared/types";
 
 const router = Router();
+
+const CONTACT_TO = "zalam.showbox@gmail.com";
+
+const contactFormSchema = z.object({
+  name: z.string().min(1, "Nombre es requerido").max(200),
+  email: z.string().email("Email inválido"),
+  message: z.string().min(1, "Mensaje es requerido").max(5000),
+});
+
+// POST /api/public/contact — send contact form email (no auth)
+router.post("/contact", async (req, res) => {
+  try {
+    const parsed = contactFormSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        message: "Datos inválidos",
+        errors: parsed.error.flatten().fieldErrors,
+      });
+    }
+
+    const { name, email, message } = parsed.data;
+    const user = process.env.CONTACT_SMTP_USER;
+    const pass = process.env.CONTACT_SMTP_PASS;
+
+    if (!user || !pass) {
+      return res.status(503).json({
+        message: "Servicio de contacto no configurado. Configure CONTACT_SMTP_USER y CONTACT_SMTP_PASS.",
+      });
+    }
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: { user, pass },
+    });
+
+    await transporter.sendMail({
+      from: `"Showbox Contacto" <${user}>`,
+      to: CONTACT_TO,
+      replyTo: email,
+      subject: `Contacto web: ${name}`,
+      text: `Nombre: ${name}\nEmail: ${email}\n\nMensaje:\n${message}`,
+      html: `
+        <p><strong>Nombre:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
+        <p><strong>Mensaje:</strong></p>
+        <pre style="white-space:pre-wrap;font-family:inherit;">${escapeHtml(message)}</pre>
+      `,
+    });
+
+    res.status(201).json({ message: "Mensaje enviado correctamente" });
+  } catch (err) {
+    console.error("Contact form send error:", err);
+    res.status(500).json({ message: "Error al enviar el mensaje. Intenta más tarde." });
+  }
+});
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 // GET /api/public/featured-event
 router.get("/featured-event", async (_req, res) => {
