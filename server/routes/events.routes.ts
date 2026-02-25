@@ -59,6 +59,22 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// GET /api/events/:id/sponsors
+router.get("/:id/sponsors", async (req, res) => {
+  try {
+    const eventSponsors = await storage.getEventSponsors(req.params.id);
+    const withDetails = await Promise.all(
+      eventSponsors.map(async (es) => ({
+        ...es,
+        sponsor: await storage.getSponsor(es.sponsorId),
+      })),
+    );
+    res.json(withDetails.filter((es) => es.sponsor));
+  } catch (err) {
+    res.status(500).json({ message: "Error del servidor" });
+  }
+});
+
 // PUT /api/events/:id/feature
 router.put("/:id/feature", async (req, res) => {
   try {

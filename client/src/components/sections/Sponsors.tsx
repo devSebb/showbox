@@ -19,71 +19,68 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
 
   // GSAP marquee for silver sponsors
   useEffect(() => {
-    if (!marqueeRef.current) return;
+    if (!marqueeRef.current || silverSponsors.length === 0) return;
     const el = marqueeRef.current;
     const inner = el.querySelector(".marquee-track") as HTMLElement;
     if (!inner) return;
 
-    // Clone for seamless loop
+    // Measure BEFORE cloning — prevents flex compression from distorting the width
+    const totalWidth = inner.offsetWidth;
+    if (totalWidth === 0) return;
+
     const clone = inner.cloneNode(true) as HTMLElement;
     el.appendChild(clone);
-
-    const totalWidth = inner.offsetWidth;
 
     const tl = gsap.timeline({ repeat: -1 });
     tl.fromTo(
       el.querySelectorAll(".marquee-track"),
       { x: 0 },
-      {
-        x: -totalWidth,
-        duration: totalWidth / 80,
-        ease: "none",
-      },
+      { x: -totalWidth, duration: totalWidth / 80, ease: "none" },
     );
 
-    el.addEventListener("mouseenter", () => tl.pause());
-    el.addEventListener("mouseleave", () => tl.resume());
+    const pause = () => tl.pause();
+    const resume = () => tl.resume();
+    el.addEventListener("mouseenter", pause);
+    el.addEventListener("mouseleave", resume);
 
     return () => {
       tl.kill();
-      // Remove cloned element
-      if (clone.parentNode === el) {
-        el.removeChild(clone);
-      }
+      el.removeEventListener("mouseenter", pause);
+      el.removeEventListener("mouseleave", resume);
+      if (clone.parentNode === el) el.removeChild(clone);
     };
   }, [silverSponsors.length]);
 
   // GSAP marquee for bronze sponsors
   useEffect(() => {
-    if (!marqueeBronzeRef.current) return;
+    if (!marqueeBronzeRef.current || bronzeSponsors.length === 0) return;
     const el = marqueeBronzeRef.current;
     const inner = el.querySelector(".marquee-track") as HTMLElement;
     if (!inner) return;
 
+    const totalWidth = inner.offsetWidth;
+    if (totalWidth === 0) return;
+
     const clone = inner.cloneNode(true) as HTMLElement;
     el.appendChild(clone);
-
-    const totalWidth = inner.offsetWidth;
 
     const tl = gsap.timeline({ repeat: -1 });
     tl.fromTo(
       el.querySelectorAll(".marquee-track"),
       { x: 0 },
-      {
-        x: -totalWidth,
-        duration: totalWidth / 80,
-        ease: "none",
-      },
+      { x: -totalWidth, duration: totalWidth / 80, ease: "none" },
     );
 
-    el.addEventListener("mouseenter", () => tl.pause());
-    el.addEventListener("mouseleave", () => tl.resume());
+    const pause = () => tl.pause();
+    const resume = () => tl.resume();
+    el.addEventListener("mouseenter", pause);
+    el.addEventListener("mouseleave", resume);
 
     return () => {
       tl.kill();
-      if (clone.parentNode === el) {
-        el.removeChild(clone);
-      }
+      el.removeEventListener("mouseenter", pause);
+      el.removeEventListener("mouseleave", resume);
+      if (clone.parentNode === el) el.removeChild(clone);
     };
   }, [bronzeSponsors.length]);
 
@@ -171,7 +168,7 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
             <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10" />
             <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
 
-            <div className="marquee-track flex items-center gap-16 md:gap-24 whitespace-nowrap px-8 min-h-[3rem] md:min-h-[4rem]">
+            <div className="marquee-track flex items-center gap-16 md:gap-24 whitespace-nowrap px-8 min-h-[3rem] md:min-h-[4rem] shrink-0 min-w-max">
               {silverSponsors.map((ss) => (
                 <div
                   key={ss.id}
@@ -208,7 +205,7 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
             <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10" />
             <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
 
-            <div className="marquee-track flex items-center gap-16 md:gap-24 whitespace-nowrap px-8 min-h-[2rem] md:min-h-[3rem]">
+            <div className="marquee-track flex items-center gap-16 md:gap-24 whitespace-nowrap px-8 min-h-[2rem] md:min-h-[3rem] shrink-0 min-w-max">
               {bronzeSponsors.map((bs) => (
                 <div
                   key={bs.id}

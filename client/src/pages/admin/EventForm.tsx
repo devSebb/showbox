@@ -1,17 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useLocation, Link } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import ImageUploader from "@/components/admin/ImageUploader";
 import { apiRequest } from "@/lib/queryClient";
-import type { Event } from "@shared/types";
+import type { Event, Sponsor } from "@shared/types";
 
 const eventFormSchema = z.object({
   title: z.string().min(1, "Requerido"),
@@ -248,6 +248,127 @@ export default function EventForm() {
           </div>
         )}
       </form>
+
+      {isEdit && <EventSponsorSection eventId={params.id!} />}
+    </div>
+  );
+}
+
+function EventSponsorSection({ eventId }: { eventId: string }) {
+  const queryClient = useQueryClient();
+  const [selectedSponsorId, setSelectedSponsorId] = useState("");
+
+  const { data: allSponsors = [] } = useQuery<Sponsor[]>({
+    queryKey: ["/api/sponsors"],
+  });
+
+  const { data: eventSponsors = [], isLoading } = useQuery<any[]>({
+    queryKey: [`/api/events/${eventId}/sponsors`],
+    queryFn: () =>
+      fetch(`/api/events/${eventId}/sponsors`, { credentials: "include" }).then((r) => r.json()),
+  });
+
+  const addMutation = useMutation({
+    mutationFn: async (sponsorId: string) => {
+      await apiRequest("POST", `/api/events/${eventId}/sponsors`, { sponsorId });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/events/${eventId}/sponsors`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/public/featured-event"] });
+      setSelectedSponsorId("");
+    },
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: async (sponsorId: string) => {
+      await apiRequest("DELETE", `/api/events/${eventId}/sponsors/${sponsorId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/events/${eventId}/sponsors`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/public/featured-event"] });
+    },
+  });
+
+  const assignedIds = new Set(eventSponsors.map((es: any) => es.sponsorId));
+  const available = allSponsors.filter((s) => !assignedIds.has(s.id) && s.isActive);
+
+  const tierOrder: Record<string, number> = { title: 0, gold: 1, silver: 2, bronze: 3 };
+  const sorted = [...eventSponsors].sort((a, b) => {
+    const ta = tierOrder[(a.sponsor?.tier || a.tier) as string] ?? 4;
+    const tb = tierOrder[(b.sponsor?.tier || b.tier) as string] ?? 4;
+    return ta - tb;
+  });
+
+  return (
+    <div className="max-w-3xl mt-10 pt-8 border-t border-white/10 space-y-4">
+      <h2 className="font-display text-lg text-white/60 uppercase tracking-widest">
+        Auspiciantes del Evento
+      </h2>
+
+      {isLoading ? (
+        <p className="text-muted-foreground text-sm">Cargando...</p>
+      ) : sorted.length === 0 ? (
+        <p className="text-muted-foreground text-sm">No hay auspiciantes asignados a este evento.</p>
+      ) : (
+        <div className="space-y-2">
+          {sorted.map((es: any) => (
+            <div key={es.id} className="flex items-center gap-3 bg-card border border-white/5 px-3 py-2">
+              <div className="w-9 h-9 bg-white/5 shrink-0 flex items-center justify-center overflow-hidden">
+                {es.sponsor?.logoUrl ? (
+                  <img src={es.sponsor.logoUrl} alt="" className="w-full h-full object-contain" />
+                ) : (
+                  <span className="text-xs text-muted-foreground font-bold">
+                    {es.sponsor?.name?.charAt(0)}
+                  </span>
+                )}
+              </div>
+              <span className="flex-1 text-sm text-white truncate">{es.sponsor?.name}</span>
+              <span className="text-xs uppercase text-muted-foreground shrink-0">
+                {es.sponsor?.tier || es.tier}
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                onClick={() => removeMutation.mutate(es.sponsorId)}
+                disabled={removeMutation.isPending}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {available.length > 0 && (
+        <div className="flex gap-2 pt-1">
+          <select
+            value={selectedSponsorId}
+            onChange={(e) => setSelectedSponsorId(e.target.value)}
+            className="flex-1 bg-card border border-white/10 px-3 py-2 text-sm text-white"
+          >
+            <option value="">Seleccionar auspiciante...</option>
+            {available.map((s) => (
+              <option key={s.id} value={s.id}>
+                [{s.tier.toUpperCase()}] {s.name}
+              </option>
+            ))}
+          </select>
+          <Button
+            type="button"
+            onClick={() => selectedSponsorId && addMutation.mutate(selectedSponsorId)}
+            disabled={!selectedSponsorId || addMutation.isPending}
+            className="bg-primary hover:bg-primary/90 gap-2 shrink-0"
+          >
+            <Plus className="w-4 h-4" /> Agregar
+          </Button>
+        </div>
+      )}
+
+      {available.length === 0 && allSponsors.length > 0 && sorted.length > 0 && (
+        <p className="text-xs text-muted-foreground">Todos los auspiciantes activos están asignados.</p>
+      )}
     </div>
   );
 }
