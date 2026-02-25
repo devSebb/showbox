@@ -1,3 +1,13 @@
+process.on("unhandledRejection", (err) => {
+  console.error("UNHANDLED_REJECTION:", err);
+  process.exit(1);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("UNCAUGHT_EXCEPTION:", err);
+  process.exit(1);
+});
+
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
 import { rm, readFile } from "fs/promises";
@@ -62,6 +72,6 @@ async function buildAll() {
 }
 
 buildAll().catch((err) => {
-  console.error(err);
+  console.error("BUILD_FAILED:", err);
   process.exit(1);
 });
