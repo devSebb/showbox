@@ -2,7 +2,6 @@ services:
   - type: web
     name: showbox
     env: node
-    nodeVersion: 20
     buildCommand: npm ci && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
@@ -27,19 +26,14 @@ services:
       # Cloudflare R2 (optional – leave unset if not using R2 yet)
       - key: R2_ACCOUNT_ID
         sync: false
-
       - key: R2_ACCESS_KEY_ID
         sync: false
-
       - key: R2_SECRET_ACCESS_KEY
         sync: false
-
       - key: R2_BUCKET
         sync: false
-
       - key: R2_ENDPOINT
         sync: false
-
       - key: R2_PUBLIC_BASE_URL
         sync: false
 
