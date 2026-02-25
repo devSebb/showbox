@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { EventWithMatchups } from "@shared/types";
+import { effectiveTicketUrl } from "@/lib/utils";
 
 interface HeroProps {
   title: string;
@@ -217,7 +218,7 @@ export default function Hero({ title, subtitle, date, venue, city, ticketUrl, he
         >
           {ticketUrl && (
             <a
-              href={ticketUrl}
+              href={effectiveTicketUrl(ticketUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-display text-xl uppercase tracking-widest px-10 py-4 transition-all hover:box-glow hover:-translate-y-1"

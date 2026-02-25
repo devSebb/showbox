@@ -12,6 +12,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { effectiveTicketUrl } from "@/lib/utils";
 
 interface FightCardProps {
   matchups: MatchupWithFighters[];
@@ -492,7 +493,7 @@ export default function FightCard({ matchups, ticketUrl }: FightCardProps) {
       <div className="mt-20 text-center">
         {ticketUrl && (
           <a
-            href={ticketUrl}
+            href={effectiveTicketUrl(ticketUrl)}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block border-2 border-primary text-primary hover:bg-primary hover:text-white font-display text-2xl uppercase tracking-widest px-12 py-4 transition-all hover:box-glow"

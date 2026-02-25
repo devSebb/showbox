@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { Calendar, MapPin, Clock, Ticket } from "lucide-react";
 import { gsap } from "@/lib/gsap";
+import { effectiveTicketUrl } from "@/lib/utils";
 
 interface EventInfoProps {
   date: string | Date;
@@ -79,7 +80,7 @@ export default function EventInfo({ date, venue, city, mapEmbedUrl, ticketUrl }:
       icon: <Ticket className="w-8 h-8 text-primary" />,
       title: "Boletos",
       detail: "Disponibles en BuenPlan",
-      link: ticketUrl || undefined,
+      link: effectiveTicketUrl(ticketUrl),
     },
   ];
 

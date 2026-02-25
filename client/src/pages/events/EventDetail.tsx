@@ -8,6 +8,7 @@ import Footer from "@/components/layout/Footer";
 import FightCard from "@/components/sections/FightCard";
 import Sponsors from "@/components/sections/Sponsors";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
+import { effectiveTicketUrl } from "@/lib/utils";
 import type { EventWithMatchups } from "@shared/types";
 
 export default function EventDetail() {
@@ -161,7 +162,7 @@ export default function EventDetail() {
                     <Ticket className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Boletos</p>
-                      <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" className="text-primary text-sm font-medium hover:underline">
+                      <a href={effectiveTicketUrl(event.ticketUrl)} target="_blank" rel="noopener noreferrer" className="text-primary text-sm font-medium hover:underline">
                         Comprar Ahora
                       </a>
                     </div>
@@ -172,7 +173,7 @@ export default function EventDetail() {
               {/* CTA */}
               {event.ticketUrl && (
                 <a
-                  href={event.ticketUrl}
+                  href={effectiveTicketUrl(event.ticketUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block bg-primary hover:bg-primary/90 text-white font-display text-xl uppercase tracking-widest px-10 py-4 transition-all hover:box-glow hover:-translate-y-1"

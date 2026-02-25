@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import logo from "@assets/showbox_logo.png";
+import { effectiveTicketUrl } from "@/lib/utils";
 
 interface NavbarProps {
   ticketUrl?: string | null;
@@ -40,7 +41,7 @@ export default function Navbar({ ticketUrl, ticketCtaText }: NavbarProps) {
       ];
 
   const ctaText = ticketCtaText || "Comprar Boletos";
-  const ctaUrl = ticketUrl || "https://www.buenplan.com.ec/event/quorum-figth-xiii-2025-quito";
+  const ctaUrl = effectiveTicketUrl(ticketUrl);
 
   const renderNavLink = (link: typeof navLinks[0]) => {
     if (link.isHash) {

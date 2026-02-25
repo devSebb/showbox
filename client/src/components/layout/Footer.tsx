@@ -1,12 +1,13 @@
 import { Link } from "wouter";
 import logo from "@assets/showbox_logo.png";
+import { effectiveTicketUrl } from "@/lib/utils";
 
 interface FooterProps {
   ticketUrl?: string | null;
 }
 
 export default function Footer({ ticketUrl }: FooterProps) {
-  const ctaUrl = ticketUrl || "https://www.buenplan.com.ec/event/quorum-figth-xiii-2025-quito";
+  const ctaUrl = effectiveTicketUrl(ticketUrl);
 
   const hashLinks = [
     { name: "Inicio", href: "#inicio" },
