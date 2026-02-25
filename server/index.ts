@@ -10,6 +10,10 @@ import { createServer } from "http";
 const app = express();
 const httpServer = createServer(app);
 
+// Required when behind a reverse proxy (Render, nginx, etc.) so cookies and
+// req.protocol work correctly for HTTPS
+app.set("trust proxy", 1);
+
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;

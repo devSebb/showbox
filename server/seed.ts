@@ -18,16 +18,18 @@ export async function seed() {
   let adminPassword = process.env.ADMIN_INITIAL_PASSWORD;
   if (!adminPassword) {
     if (process.env.NODE_ENV === "production") {
-      log("ADMIN_INITIAL_PASSWORD not set — skipping admin creation. Set it and redeploy to create the admin user.", "seed");
+      log("ADMIN_INITIAL_PASSWORD not set — skipping admin creation. Set it in Render env vars and redeploy.", "seed");
       return;
     }
     adminPassword = "showbox2026";
+    log("Using dev default password (showbox2026)", "seed");
   }
   const hashedPassword = await hashPassword(adminPassword);
   await storage.createUser({
     username: "admin",
     password: hashedPassword,
   });
+  log("Admin user created. Username: admin. Login at /admin/login", "seed");
 
   // ─── Fighters ────────────────────────────────────
   const fighterData = [
