@@ -53,7 +53,7 @@ export default function About({ aboutText }: AboutProps) {
   const stats = [
     { value: "XIII", label: "Eventos Realizados" },
     { value: "50+", label: "Peleas Profesionales" },
-    { value: "1000+", label: "Asistentes por Evento" },
+    { value: "1500+", label: "Asistentes por Evento" },
   ];
 
   const displayText =

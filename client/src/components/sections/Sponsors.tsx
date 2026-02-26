@@ -5,9 +5,10 @@ import type { EventWithMatchups } from "@shared/types";
 
 interface SponsorsProps {
   sponsors: EventWithMatchups["sponsors"];
+  isLandingPage?: boolean;
 }
 
-export default function Sponsors({ sponsors }: SponsorsProps) {
+export default function Sponsors({ sponsors, isLandingPage = false }: SponsorsProps) {
   const marqueeRef = useRef<HTMLDivElement>(null);
   const marqueeBronzeRef = useRef<HTMLDivElement>(null);
 
@@ -68,7 +69,7 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
     tl.fromTo(
       el.querySelectorAll(".marquee-track"),
       { x: 0 },
-      { x: -totalWidth, duration: totalWidth / 80, ease: "none" },
+      { x: -totalWidth, duration: totalWidth / (isLandingPage ? 60 : 80), ease: "none" },
     );
 
     const pause = () => tl.pause();
@@ -82,7 +83,7 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
       el.removeEventListener("mouseleave", resume);
       if (clone.parentNode === el) el.removeChild(clone);
     };
-  }, [bronzeSponsors.length]);
+  }, [bronzeSponsors.length, isLandingPage]);
 
   return (
     <section className="py-20 border-t border-b border-white/5 bg-black overflow-hidden">
@@ -205,20 +206,34 @@ export default function Sponsors({ sponsors }: SponsorsProps) {
             <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent z-10" />
             <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
 
-            <div className="marquee-track flex items-center gap-16 md:gap-24 whitespace-nowrap px-8 min-h-[2rem] md:min-h-[3rem] shrink-0 min-w-max">
+            <div
+              className={`marquee-track flex items-center whitespace-nowrap shrink-0 min-w-max ${
+                isLandingPage
+                  ? "gap-10 md:gap-16 px-6 min-h-[1.75rem] md:min-h-[2.5rem]"
+                  : "gap-16 md:gap-24 px-8 min-h-[2rem] md:min-h-[3rem]"
+              }`}
+            >
               {bronzeSponsors.map((bs) => (
                 <div
                   key={bs.id}
-                  className="flex items-center justify-center h-8 md:h-12 shrink-0"
+                  className={`flex items-center justify-center shrink-0 ${
+                    isLandingPage ? "h-7 md:h-10" : "h-8 md:h-12"
+                  }`}
                 >
                   {bs.sponsor?.logoUrl ? (
                     <img
                       src={bs.sponsor.logoUrl}
                       alt={bs.sponsor.name}
-                      className="h-8 md:h-12 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity"
+                      className={`w-auto object-contain opacity-60 hover:opacity-100 transition-opacity ${
+                        isLandingPage ? "h-7 md:h-10" : "h-8 md:h-12"
+                      }`}
                     />
                   ) : (
-                    <span className="font-display text-lg md:text-xl uppercase tracking-widest text-white/20 hover:text-white/40 transition-colors duration-300 cursor-default">
+                    <span
+                      className={`font-display uppercase tracking-widest text-white/20 hover:text-white/40 transition-colors duration-300 cursor-default ${
+                        isLandingPage ? "text-base md:text-lg" : "text-lg md:text-xl"
+                      }`}
+                    >
                       {bs.sponsor?.name}
                     </span>
                   )}

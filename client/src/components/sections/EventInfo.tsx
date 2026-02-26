@@ -8,11 +8,10 @@ interface EventInfoProps {
   venue: string | null;
   city: string | null;
   address: string | null;
-  mapEmbedUrl: string | null;
   ticketUrl: string | null;
 }
 
-export default function EventInfo({ date, venue, city, mapEmbedUrl, ticketUrl }: EventInfoProps) {
+export default function EventInfo({ date, venue, city, ticketUrl }: EventInfoProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const eventDate = new Date(date);
 
@@ -45,7 +44,7 @@ export default function EventInfo({ date, venue, city, mapEmbedUrl, ticketUrl }:
           toggleActions: "play none none none",
         },
       });
-      gsap.from(".info-map", {
+      gsap.from(".info-fight-week", {
         x: 50,
         opacity: 0,
         duration: 0.6,
@@ -115,23 +114,15 @@ export default function EventInfo({ date, venue, city, mapEmbedUrl, ticketUrl }:
             ))}
           </div>
 
-          {/* Map */}
-          {mapEmbedUrl && (
-            <div className="info-map w-full lg:w-1/2 aspect-video lg:aspect-square relative group overflow-hidden">
-              <div className="absolute inset-0 bg-background/50 z-10 pointer-events-none group-hover:bg-transparent transition-colors duration-500" />
-              <div className="absolute inset-0 border border-white/10 z-20 pointer-events-none" />
-              <iframe
-                src={mapEmbedUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(1.2)' }}
-                allowFullScreen={false}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-              <div className="absolute bottom-0 right-0 w-32 h-32 bg-primary/20 blur-3xl z-0" />
-            </div>
-          )}
+          {/* Fight Week schedule image */}
+          <div className="info-fight-week w-full lg:w-1/2 aspect-video lg:aspect-square relative group overflow-hidden">
+            <div className="absolute inset-0 border border-white/10 z-20 pointer-events-none" />
+            <img
+              src="/fight-week.jpeg"
+              alt="Fight Week — programa de la semana del evento"
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
         </div>
       </div>
     </section>

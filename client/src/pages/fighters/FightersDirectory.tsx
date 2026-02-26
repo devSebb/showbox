@@ -75,7 +75,7 @@ export default function FightersDirectory() {
             Peleadores
           </h1>
           <p className="text-muted-foreground uppercase tracking-widest text-sm font-medium">
-            El talento del boxeo ecuatoriano
+            El talento del boxeo latinoamericano
           </p>
           <div className="w-24 h-1 bg-primary mx-auto mt-6 -skew-x-12" />
         </div>

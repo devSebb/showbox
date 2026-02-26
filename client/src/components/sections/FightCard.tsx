@@ -3,10 +3,6 @@ import { motion } from "framer-motion";
 import { gsap } from "@/lib/gsap";
 import fighter1 from "@/assets/images/fighter_1.jpg";
 import fighter2 from "@/assets/images/fighter_2.jpg";
-import fightWeekImg from "@assets/fight-week.jpeg";
-import mainCardImg from "@assets/main-card.jpeg";
-import prelimsCardImg from "@assets/prelims-card.jpeg";
-import undercardImg from "@assets/undercard.jpeg";
 import type { MatchupWithFighters } from "@shared/types";
 import {
   Dialog,
@@ -424,41 +420,6 @@ export default function FightCard({ matchups, ticketUrl }: FightCardProps) {
         >
           {totalFights} peleas profesionales — una noche de boxeo de élite
         </motion.p>
-
-        {/* Fight Card Posters */}
-        <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-          {[
-            { src: fightWeekImg, label: "Media Week", delay: 0.05 },
-            { src: mainCardImg, label: "Main Card", delay: 0.1 },
-            { src: prelimsCardImg, label: "Preliminares", delay: 0.25 },
-            { src: undercardImg, label: "Undercard", delay: 0.4 },
-          ].map((card) => (
-            <motion.div
-              key={card.label}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: card.delay }}
-              className="group relative flex flex-col"
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-px h-4 bg-primary shrink-0" />
-                <span className="font-display text-[10px] md:text-xs uppercase tracking-[0.25em] text-white/50 group-hover:text-white/80 transition-colors duration-300">
-                  {card.label}
-                </span>
-              </div>
-              <div className="relative overflow-hidden ring-1 ring-white/10 group-hover:ring-primary/50 transition-all duration-500">
-                <img
-                  src={card.src}
-                  alt={card.label}
-                  className="w-full max-h-[50vh] object-contain transition-transform duration-700 group-hover:scale-[1.03]"
-                  style={{ background: "#0a0a0a" }}
-                />
-                <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.04] transition-all duration-500 pointer-events-none" />
-              </div>
-            </motion.div>
-          ))}
-        </div>
       </div>
 
       {grouped.map((group) => (

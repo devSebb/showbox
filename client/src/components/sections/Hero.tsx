@@ -179,7 +179,15 @@ export default function Hero({ title, subtitle, date, venue, city, ticketUrl, he
           />
 
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[0.9] text-white uppercase tracking-normal mb-2">
-            {line1}<br />
+            {line1 === "Quorum Quito" ? (
+              <img
+                src="/qfn-quorum-quito-logo.png"
+                alt="Quorum Quito"
+                className="max-w-[80px] sm:max-w-[120px] md:max-w-[160px] lg:max-w-[180px] w-full mx-auto object-contain mb-8"
+              />
+            ) : (
+              <>{line1}<br /></>
+            )}
             <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>{line2}</span><br />
             {hasRoman && <span className="text-primary text-glow">{romanNumeral}</span>}
           </h1>
@@ -190,9 +198,6 @@ export default function Hero({ title, subtitle, date, venue, city, ticketUrl, he
               <span style={{ color: titleSponsor.sponsor.brandColor || "#00FF00" }}>
                 {titleSponsor.sponsor.name}
               </span>
-              {titleSponsor.sponsor.tagline && (
-                <> — {titleSponsor.sponsor.tagline}</>
-              )}
             </p>
           )}
           {subtitle && !titleSponsor && (

@@ -31,9 +31,9 @@ export default function Gallery() {
     <section ref={sectionRef} className="py-24 bg-background">
       <div className="container mx-auto px-4 mb-16">
         <h2 className="font-display text-5xl md:text-7xl text-white uppercase tracking-tight text-center">
-          Momentos de{" "}
+          Experiencias de{" "}
           <span className="text-transparent" style={{ WebkitTextStroke: "2px white" }}>
-            Combate
+            Marca
           </span>
         </h2>
       </div>

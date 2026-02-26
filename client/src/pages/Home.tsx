@@ -68,7 +68,6 @@ export default function Home() {
           venue={event.venue}
           city={event.city}
           address={event.address}
-          mapEmbedUrl={event.mapEmbedUrl}
           ticketUrl={event.ticketUrl}
         />
         <FightCard
@@ -76,7 +75,7 @@ export default function Home() {
           ticketUrl={event.ticketUrl}
         />
         <About aboutText={settings?.aboutText} />
-        <Sponsors sponsors={event.sponsors} />
+        <Sponsors sponsors={event.sponsors} isLandingPage />
         <Gallery />
         <Contact settings={settings} />
       </main>
