@@ -73,10 +73,6 @@ const CountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 export default function Hero({ title, subtitle, date, venue, city, ticketUrl, heroImageUrl: _heroImageUrl, sponsors }: HeroProps) {
   const eventDate = new Date(date);
 
-  // Find title sponsor for hero display
-  const titleSponsor = sponsors?.find((s) => s.sponsor?.tier === "title");
-
-
   // Format date for display
   const dateStr = eventDate.toLocaleDateString("es-EC", {
     weekday: "long",
@@ -85,15 +81,6 @@ export default function Hero({ title, subtitle, date, venue, city, ticketUrl, he
     year: "numeric",
   });
   const capitalizedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-
-  // Parse title parts for styling (e.g. "Quorum Quito Fight Night XIII")
-  const titleParts = title.split(" ");
-  const romanNumeral = titleParts[titleParts.length - 1];
-  const hasRoman = /^[IVXLCDM]+$/.test(romanNumeral);
-  const mainTitle = hasRoman ? titleParts.slice(0, -1) : titleParts;
-  const midPoint = Math.ceil(mainTitle.length / 2);
-  const line1 = mainTitle.slice(0, midPoint).join(" ");
-  const line2 = mainTitle.slice(midPoint).join(" ");
 
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-10">
@@ -178,33 +165,11 @@ export default function Hero({ title, subtitle, date, venue, city, ticketUrl, he
             className="max-w-[240px] sm:max-w-[320px] md:max-w-[420px] lg:max-w-[520px] xl:max-w-[600px] w-full mx-auto object-contain mb-6"
           />
 
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[0.9] text-white uppercase tracking-normal mb-2">
-            {line1 === "Quorum Quito" ? (
-              <img
-                src="/qfn-quorum-quito-logo.png"
-                alt="Quorum Quito"
-                className="max-w-[80px] sm:max-w-[120px] md:max-w-[160px] lg:max-w-[180px] w-full mx-auto object-contain mb-8"
-              />
-            ) : (
-              <>{line1}<br /></>
-            )}
-            <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>{line2}</span><br />
-            {hasRoman && <span className="text-primary text-glow">{romanNumeral}</span>}
-          </h1>
-
-          {subtitle && titleSponsor?.sponsor && (
-            <p className="font-display text-xl md:text-3xl text-white uppercase tracking-wider mb-8">
-              By{" "}
-              <span style={{ color: titleSponsor.sponsor.brandColor || "#00FF00" }}>
-                {titleSponsor.sponsor.name}
-              </span>
-            </p>
-          )}
-          {subtitle && !titleSponsor && (
-            <p className="font-display text-xl md:text-3xl text-white uppercase tracking-wider mb-8">
-              {subtitle}
-            </p>
-          )}
+          <img
+            src="/quorum-forbet.jpeg"
+            alt="Quorum Quito Fight Night by Forbet"
+            className="max-w-[280px] sm:max-w-[360px] md:max-w-[440px] w-full mx-auto object-contain mb-8"
+          />
         </motion.div>
 
         <motion.div

@@ -209,15 +209,15 @@ export default function Sponsors({ sponsors, isLandingPage = false }: SponsorsPr
             <div
               className={`marquee-track flex items-center whitespace-nowrap shrink-0 min-w-max ${
                 isLandingPage
-                  ? "gap-10 md:gap-16 px-6 min-h-[1.75rem] md:min-h-[2.5rem]"
-                  : "gap-16 md:gap-24 px-8 min-h-[2rem] md:min-h-[3rem]"
+                  ? "gap-10 md:gap-16 px-6 min-h-[1.5rem] md:min-h-[2rem]"
+                  : "gap-16 md:gap-24 px-8 min-h-[1.75rem] md:min-h-[2.5rem]"
               }`}
             >
               {bronzeSponsors.map((bs) => (
                 <div
                   key={bs.id}
                   className={`flex items-center justify-center shrink-0 ${
-                    isLandingPage ? "h-7 md:h-10" : "h-8 md:h-12"
+                    isLandingPage ? "h-6 md:h-8" : "h-7 md:h-10"
                   }`}
                 >
                   {bs.sponsor?.logoUrl ? (
@@ -225,7 +225,7 @@ export default function Sponsors({ sponsors, isLandingPage = false }: SponsorsPr
                       src={bs.sponsor.logoUrl}
                       alt={bs.sponsor.name}
                       className={`w-auto object-contain opacity-60 hover:opacity-100 transition-opacity ${
-                        isLandingPage ? "h-7 md:h-10" : "h-8 md:h-12"
+                        isLandingPage ? "h-6 md:h-8" : "h-7 md:h-10"
                       }`}
                     />
                   ) : (
