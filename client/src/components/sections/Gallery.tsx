@@ -1,9 +1,9 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "@/lib/gsap";
-import gallery1 from "@/assets/images/gallery_1.jpg";
-import gallery2 from "@/assets/images/gallery_2.jpg";
+import gallery1 from "@/assets/images/gallery_1.jpeg";
+import gallery2 from "@/assets/images/gallery_2.jpeg";
 import gallery3 from "@/assets/images/gallery_3.jpg";
-import gallery4 from "@/assets/images/gallery_4.jpg";
+import gallery4 from "@/assets/images/gallery_4.jpeg";
 
 export default function Gallery() {
   const sectionRef = useRef<HTMLElement>(null);
