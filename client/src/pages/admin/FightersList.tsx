@@ -57,8 +57,15 @@ export default function FightersList() {
                         </div>
                       )}
                       <div>
-                        <p className="text-white font-medium text-sm">
+                        <p className="text-white font-medium text-sm flex items-center gap-2">
                           {fighter.firstName} {fighter.lastName}
+                          <span className={`px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none ${
+                            fighter.isAmateur
+                              ? "bg-amber-900/20 text-amber-400 border border-amber-500/30"
+                              : "bg-blue-900/20 text-blue-400 border border-blue-500/30"
+                          }`}>
+                            {fighter.isAmateur ? "Amateur" : "Pro"}
+                          </span>
                         </p>
                         {fighter.nickname && (
                           <p className="text-xs text-muted-foreground italic">"{fighter.nickname}"</p>

@@ -31,6 +31,7 @@ export interface IStorage {
     weightClass?: string;
     nationality?: string;
     isActive?: boolean;
+    isAmateur?: boolean;
   }): Promise<Fighter[]>;
   createFighter(fighter: InsertFighter): Promise<Fighter>;
   updateFighter(
@@ -147,6 +148,7 @@ export class MemStorage implements IStorage {
     weightClass?: string;
     nationality?: string;
     isActive?: boolean;
+    isAmateur?: boolean;
   }): Promise<Fighter[]> {
     let result = Array.from(this.fightersMap.values());
     if (filters) {
@@ -158,6 +160,9 @@ export class MemStorage implements IStorage {
       }
       if (filters.isActive !== undefined) {
         result = result.filter((f) => f.isActive === filters.isActive);
+      }
+      if (filters.isAmateur !== undefined) {
+        result = result.filter((f) => f.isAmateur === filters.isAmateur);
       }
     }
     return result;
@@ -191,6 +196,7 @@ export class MemStorage implements IStorage {
       facebook: data.facebook ?? null,
       tiktok: data.tiktok ?? null,
       isActive: data.isActive ?? true,
+      isAmateur: data.isAmateur ?? false,
       createdAt: now,
       updatedAt: now,
     };

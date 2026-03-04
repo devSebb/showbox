@@ -171,10 +171,16 @@ export default function FighterProfile() {
                   "{fighter.nickname}"
                 </p>
               )}
-              <h1 className="font-display text-4xl md:text-6xl lg:text-7xl text-white uppercase tracking-tight mb-8">
+              <h1 className="font-display text-4xl md:text-6xl lg:text-7xl text-white uppercase tracking-tight mb-4">
                 {fighter.firstName}{" "}
                 <span className="text-primary">{fighter.lastName}</span>
               </h1>
+              {fighter.isAmateur && (
+                <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider bg-amber-900/20 text-amber-400 border border-amber-500/30 mb-8">
+                  Amateur
+                </span>
+              )}
+              {!fighter.isAmateur && <div className="mb-4" />}
 
               {/* Tale of Tape */}
               <div className="mb-12">

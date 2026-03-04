@@ -1,0 +1,1 @@
+ALTER TABLE "fighters" ADD COLUMN "is_amateur" boolean DEFAULT false NOT NULL;

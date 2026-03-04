@@ -38,6 +38,7 @@ const fighterFormSchema = z.object({
   facebook: z.string().optional().nullable(),
   tiktok: z.string().optional().nullable(),
   isActive: z.boolean().default(true),
+  isAmateur: z.boolean().default(false),
 });
 
 type FighterFormValues = z.infer<typeof fighterFormSchema>;
@@ -68,6 +69,7 @@ export default function FighterForm() {
       draws: 0,
       kos: 0,
       isActive: true,
+      isAmateur: false,
     },
   });
 
@@ -96,6 +98,7 @@ export default function FighterForm() {
         facebook: fighter.facebook,
         tiktok: fighter.tiktok,
         isActive: fighter.isActive,
+        isAmateur: fighter.isAmateur,
       });
     }
   }, [fighter, reset]);
@@ -127,6 +130,20 @@ export default function FighterForm() {
       </h1>
 
       <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="max-w-3xl space-y-8">
+        {/* Amateur toggle */}
+        <div className="flex items-center gap-3 bg-card border border-white/10 p-4">
+          <Switch
+            checked={watch("isAmateur")}
+            onCheckedChange={(v) => setValue("isAmateur", v)}
+          />
+          <div>
+            <Label className="text-white font-semibold">Amateur</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {watch("isAmateur") ? "Este peleador es amateur" : "Este peleador es profesional"}
+            </p>
+          </div>
+        </div>
+
         {/* Basic Info */}
         <fieldset className="space-y-4">
           <legend className="font-display text-lg text-white/60 uppercase tracking-widest mb-4">Información Básica</legend>

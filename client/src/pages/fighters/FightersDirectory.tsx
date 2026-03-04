@@ -27,10 +27,16 @@ const weightClasses = [
 export default function FightersDirectory() {
   const [search, setSearch] = useState("");
   const [weightClass, setWeightClass] = useState("");
+  const [tab, setTab] = useState<"pro" | "amateur">("pro");
   const gridRef = useRef<HTMLDivElement>(null);
 
   const { data: fighters, isLoading } = useQuery<Fighter[]>({
-    queryKey: ["/api/public/fighters"],
+    queryKey: ["/api/public/fighters", { isAmateur: tab === "amateur" }],
+    queryFn: async () => {
+      const res = await fetch(`/api/public/fighters?isAmateur=${tab === "amateur"}`);
+      if (!res.ok) throw new Error("Failed to fetch fighters");
+      return res.json();
+    },
   });
 
   // useEffect(() => {
@@ -78,6 +84,34 @@ export default function FightersDirectory() {
             El talento del boxeo latinoamericano
           </p>
           <div className="w-24 h-1 bg-primary mx-auto mt-6 -skew-x-12" />
+        </div>
+      </section>
+
+      {/* Pro / Amateur Tabs */}
+      <section className="pb-6">
+        <div className="container mx-auto px-4 flex justify-center">
+          <div className="inline-flex border border-white/10">
+            <button
+              onClick={() => { setTab("pro"); setSearch(""); setWeightClass(""); }}
+              className={`px-6 py-2.5 text-sm font-semibold uppercase tracking-wider transition-colors ${
+                tab === "pro"
+                  ? "bg-primary text-white"
+                  : "bg-card text-muted-foreground hover:text-white"
+              }`}
+            >
+              Profesionales
+            </button>
+            <button
+              onClick={() => { setTab("amateur"); setSearch(""); setWeightClass(""); }}
+              className={`px-6 py-2.5 text-sm font-semibold uppercase tracking-wider transition-colors ${
+                tab === "amateur"
+                  ? "bg-primary text-white"
+                  : "bg-card text-muted-foreground hover:text-white"
+              }`}
+            >
+              Amateurs
+            </button>
+          </div>
         </div>
       </section>
 

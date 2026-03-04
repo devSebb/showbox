@@ -64,6 +64,7 @@ export class DbStorage implements IStorage {
     weightClass?: string;
     nationality?: string;
     isActive?: boolean;
+    isAmateur?: boolean;
   }): Promise<Fighter[]> {
     const conditions = [];
     if (filters?.weightClass !== undefined)
@@ -72,6 +73,8 @@ export class DbStorage implements IStorage {
       conditions.push(eq(schema.fighters.nationality, filters.nationality));
     if (filters?.isActive !== undefined)
       conditions.push(eq(schema.fighters.isActive, filters.isActive));
+    if (filters?.isAmateur !== undefined)
+      conditions.push(eq(schema.fighters.isAmateur, filters.isAmateur));
 
     if (conditions.length === 0) {
       return getDb().select().from(schema.fighters);

@@ -58,8 +58,15 @@ export default function FighterPicker({ open, onClose, onSelect, excludeIds = []
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-white text-sm font-medium truncate">
+                <p className="text-white text-sm font-medium truncate flex items-center gap-1.5">
                   {fighter.firstName} {fighter.lastName}
+                  <span className={`px-1 py-0.5 text-[9px] font-bold uppercase leading-none shrink-0 ${
+                    fighter.isAmateur
+                      ? "bg-amber-900/20 text-amber-400 border border-amber-500/30"
+                      : "bg-blue-900/20 text-blue-400 border border-blue-500/30"
+                  }`}>
+                    {fighter.isAmateur ? "AM" : "PRO"}
+                  </span>
                   {fighter.nickname && <span className="text-muted-foreground italic ml-1">"{fighter.nickname}"</span>}
                 </p>
                 <p className="text-xs text-muted-foreground">

@@ -1,1 +1,27 @@
-{"version":"7","dialect":"postgresql","entries":[{"idx":0,"version":"7","when":1771965381977,"tag":"0000_chief_gertrude_yorkes","breakpoints":true},{"idx":1,"version":"7","when":1772050000000,"tag":"0001_session","breakpoints":true}]}
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1771965381977,
+      "tag": "0000_chief_gertrude_yorkes",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1772050000000,
+      "tag": "0001_session",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772584561078,
+      "tag": "0002_early_hardball",
+      "breakpoints": true
+    }
+  ]
+}

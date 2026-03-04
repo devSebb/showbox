@@ -167,11 +167,12 @@ router.get("/events/:slug", async (req, res) => {
 // GET /api/public/fighters
 router.get("/fighters", async (req, res) => {
   try {
-    const filters: { weightClass?: string; nationality?: string; isActive: boolean } = {
+    const filters: { weightClass?: string; nationality?: string; isActive: boolean; isAmateur?: boolean } = {
       isActive: true,
     };
     if (req.query.weightClass) filters.weightClass = req.query.weightClass as string;
     if (req.query.nationality) filters.nationality = req.query.nationality as string;
+    if (req.query.isAmateur !== undefined) filters.isAmateur = req.query.isAmateur === "true";
 
     const fighters = await storage.getFighters(filters);
     res.json(fighters);
