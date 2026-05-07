@@ -14,35 +14,40 @@ interface HeroProps {
   sponsors: EventWithMatchups["sponsors"];
 }
 
+const computeTimeLeft = (target: number) => {
+  const difference = target - Date.now();
+  if (difference <= 0) return null;
+  return {
+    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+    seconds: Math.floor((difference % (1000 * 60)) / 1000),
+  };
+};
+
 const CountdownTimer = ({ targetDate }: { targetDate: Date }) => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  const target = targetDate.getTime();
+  const [timeLeft, setTimeLeft] = useState(() => computeTimeLeft(target));
 
   useEffect(() => {
-    const target = targetDate.getTime();
-
+    setTimeLeft(computeTimeLeft(target));
     const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const difference = target - now;
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((difference % (1000 * 60)) / 1000),
-        });
-      } else {
-        clearInterval(interval);
-      }
+      const next = computeTimeLeft(target);
+      setTimeLeft(next);
+      if (next === null) clearInterval(interval);
     }, 1000);
-
     return () => clearInterval(interval);
-  }, [targetDate]);
+  }, [target]);
+
+  if (timeLeft === null) {
+    return (
+      <div className="flex justify-center my-8">
+        <span className="font-display text-2xl md:text-3xl text-primary text-glow uppercase tracking-[0.2em]">
+          Evento Finalizado
+        </span>
+      </div>
+    );
+  }
 
   const timeBlocks = [
     { label: "Días", value: timeLeft.days },
